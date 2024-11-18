@@ -2,14 +2,22 @@ import { Text, View, StyleSheet, Pressable } from 'react-native'
 import React, { useState } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import Stack from "./Stack"
+import { SafeAreaProvider } from 'react-native-safe-area-context'
+import BatteryContext from './supports/BatteryContext'
 
 export default function Main() {
 
+    const [data, setData] = useState([])  
+
     return (
         <>
-            <NavigationContainer>
-                <Stack />
-            </NavigationContainer>
+            <SafeAreaProvider>
+                <BatteryContext.Provider value={{ data, setData }}>
+                    <NavigationContainer>
+                        <Stack />
+                    </NavigationContainer>
+                </BatteryContext.Provider>
+            </SafeAreaProvider>
         </>
     );
 }

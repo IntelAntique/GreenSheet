@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo, useContext, useEffect } from "react";
 import { View, TextInput, FlatList, Image, StyleSheet, Pressable, Animated, Dimension } from "react-native";
 import { Avatar, Button, Text, Card as PaperCard } from "react-native-paper";
 import Card from "../supports/MyCard";
@@ -6,52 +6,66 @@ import AddDevice from "./AddDevice";
 import { useNavigation } from "@react-navigation/native";
 import AnimatedWaveHeader from "./AnimatedWaveHeader";
 import AddButton from "./AddButton";
+import ContextModal from '../supports/Modal';
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { BatteryContext } from "../supports/BatteryContext";
 
 export default function Home() {
     const navigation = useNavigation();
-    const data = [
-        {
-            id: 1,
-            name: "Robert Downey Jr",
-            location: {
-                latitude: 40.7128,
-                longitude: -74.0060
-            },
-            batteryPercentage: 75,
-            deviceName: "iPhone 13 Pro"
-        },
-        {
-            id: 2,
-            name: "Harvey Specter",
-            location: {
-                latitude: 34.0522,
-                longitude: -118.2437
-            },
-            batteryPercentage: 50,
-            deviceName: "Samsung Galaxy S22"
-        },
-        {
-            id: 3,
-            name: "Sarah",
-            location: {
-                latitude: 41.8781,
-                longitude: -87.6298
-            },
-            batteryPercentage: 90,
-            deviceName: "Google Pixel 6"
-        },
-        {
-            id: 4,
-            name: "Young Sheldon",
-            location: {
-                latitude: 29.7604,
-                longitude: -95.3698
-            },
-            batteryPercentage: 65,
-            deviceName: "OnePlus 9"
-        }
-    ];
+    const { data, setData } = useContext(BatteryContext);
 
+    const [modalVisible, setModalVisible] = useState(false);
+    const [selectedItem, setSelectedItem] = useState(null);
+
+    useEffect(() => {
+        setData([
+            {
+                id: 1,
+                name: "Robert Downey Jr",
+                location: {
+                    latitude: 40.7128,
+                    longitude: -74.0060
+                },
+                batteryPercentage: 75,
+                deviceName: "iPhone 13 Pro"
+            },
+            {
+                id: 2,
+                name: "Harvey Specter",
+                location: {
+                    latitude: 34.0522,
+                    longitude: -118.2437
+                },
+                batteryPercentage: 50,
+                deviceName: "Samsung Galaxy S22"
+            },
+            {
+                id: 3,
+                name: "Sarah",
+                location: {
+                    latitude: 41.8781,
+                    longitude: -87.6298
+                },
+                batteryPercentage: 90,
+                deviceName: "Google Pixel 6"
+            },
+            {
+                id: 4,
+                name: "Young Sheldon",
+                location: {
+                    latitude: 29.7604,
+                    longitude: -95.3698
+                },
+                batteryPercentage: 65,
+                deviceName: "OnePlus 9"
+            }
+        ])
+    }, []);
+
+    useEffect(() => {
+        // console.log(data); 
+    }, [data]);
+    
     const renderItem = ({ item }) => (
         <Pressable 
             onPress={() => navigation.navigate('Maps', {
@@ -61,6 +75,10 @@ export default function Home() {
                 deviceName: item.deviceName,
                 batteryPercentage: item.batteryPercentage
             })}
+            onLongPress={() => {
+                setSelectedItem(item);
+                setModalVisible(true);
+            }}
         >
             <PaperCard style={[styles.card, styles.pressable]}>
                 <PaperCard.Content>
@@ -84,14 +102,21 @@ export default function Home() {
         </Pressable>
     );
 
+    const insets = useSafeAreaInsets();
+
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, {paddingTop: insets.top, paddingBottom: insets.bottom}]}>
             <AnimatedWaveHeader />
             <FlatList
                 data={data}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.name}
                 ListFooterComponent={AddButton}
+            />
+            <ContextModal 
+                visible={modalVisible} 
+                onClose={() => setModalVisible(false)}
+                selectedItem={selectedItem}
             />
         </View>
     );

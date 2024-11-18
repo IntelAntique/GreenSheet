@@ -3,7 +3,7 @@ import { useNavigation } from "@react-navigation/native";
 import { FlatList, View, StyleSheet, Pressable } from "react-native";
 import React from "react";
 
-export default function AddButton() {
+export default function AddButton(props) {
     const navigation = useNavigation();
 
     const renderAddDeviceCard = () => (

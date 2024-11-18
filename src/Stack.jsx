@@ -10,7 +10,7 @@ const StackNav = createStackNavigator();
 
 function Stack(props) {
     return (
-        <StackNav.Navigator screenOptions={{headerShown: true}}>
+        <StackNav.Navigator screenOptions={{headerShown: false}}>
             <StackNav.Screen name="Home" component={Home} />
             <StackNav.Screen name="Device" component={Device} />
             <StackNav.Screen name="Settings" component={Settings} />
