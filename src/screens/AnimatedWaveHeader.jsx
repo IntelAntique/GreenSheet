@@ -33,11 +33,6 @@ export default function AnimatedWaveHeader() {
         outputRange: [-width, 0]
     });
 
-    const translateX2 = animatedValue2.interpolate({
-        inputRange: [0, 1],
-        outputRange: [-width, 0]
-    });
-
     return (
         <MaskedView
             style={{ height: 60, backgroundColor: 'transparent' }}
